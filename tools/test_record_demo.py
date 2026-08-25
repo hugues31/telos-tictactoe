@@ -114,7 +114,7 @@ class DemoTourTest(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "below 10.0 MB"):
                 enforce_gif_size(gif)
 
-    def test_tour_visits_the_telos_090_overview(self) -> None:
+    def test_tour_showcases_the_telos_v011_preview(self) -> None:
         with tempfile.TemporaryDirectory(prefix="telos-demo-test-") as tmp:
             site = Path(tmp) / "site"
             subprocess.run(["telos", "view", "--export", str(site)], check=True)
@@ -136,22 +136,22 @@ class DemoTourTest(unittest.TestCase):
 
                     try:
                         try:
-                            record_demo.tour(
+                            result = record_demo.tour(
                                 page,
                                 f"http://127.0.0.1:{server.server_address[1]}",
                             )
                         except Exception as error:
-                            self.fail(f"the Telos 0.9.0 tour did not complete: {error}")
+                            self.fail(f"the Telos 0.11.0 tour did not complete: {error}")
+                        self.assertEqual("starvation", result.global_search_query)
+                        self.assertEqual("INT-0008", result.intent_id)
+                        self.assertEqual("SCN-0011", result.scenario_id)
+                        self.assertEqual("INT-0008", result.graph_query)
+                        self.assertEqual("INT-0008", result.selected_node)
+                        self.assertEqual("Pet", result.glossary_query)
+                        self.assertGreater(result.glossary_consumers, 0)
                         self.assertEqual(
-                            ["/", "/intents", "/intent/INT-0008", "/graph"],
+                            ["/", "/intent/INT-0008", "/graph", "/glossary"],
                             [route for route in dict.fromkeys(visited) if route],
-                        )
-                        self.assertEqual(
-                            "requires",
-                            page.get_by_label("Filter graph by relation").input_value(),
-                        )
-                        self.assertIn(
-                            "SELECTED NODE", page.locator(".selection-panel").inner_text()
                         )
                     finally:
                         browser.close()

@@ -18,11 +18,12 @@ import subprocess
 import sys
 import tempfile
 import threading
+from dataclasses import dataclass
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from playwright.sync_api import Page, sync_playwright
+from playwright.sync_api import Locator, Page, sync_playwright
 
 VIEWPORT = {"width": 1280, "height": 800}
 GIF_WIDTH = 960
@@ -32,20 +33,20 @@ MAX_GIF_BYTES = 10_000_000
 
 # Installed on every page: a dot that follows mousemove events (Playwright's
 # mouse dispatches real DOM events, the OS cursor is never on the video) and
-# a ripple ring on mousedown. Colours match the site's --accent.
+# a ripple ring on mousedown. Colours match the v0.11 Telos identity.
 CURSOR_JS = """
 (() => {
   const install = () => {
     const style = document.createElement('style');
     style.textContent = `
       #demo-cursor{position:fixed;left:0;top:0;width:22px;height:22px;
-        margin:-11px 0 0 -11px;border-radius:50%;background:rgba(31,111,74,.85);
-        box-shadow:0 0 0 4px rgba(31,111,74,.22),0 2px 8px rgba(0,0,0,.35);
+        margin:-11px 0 0 -11px;border-radius:50%;background:rgba(1,98,251,.88);
+        box-shadow:0 0 0 4px rgba(1,98,251,.22),0 2px 8px rgba(0,0,0,.35);
         pointer-events:none;z-index:2147483647;opacity:0;
         transition:opacity .2s,transform .12s;}
       #demo-cursor.down{transform:scale(.65);}
       .demo-ripple{position:fixed;width:80px;height:80px;border-radius:50%;
-        border:3px solid rgba(31,111,74,.8);pointer-events:none;
+        border:3px solid rgba(3,225,240,.85);pointer-events:none;
         z-index:2147483646;transform:translate(-50%,-50%);
         animation:demo-ripple .5s ease-out forwards;}
       @keyframes demo-ripple{
@@ -77,6 +78,17 @@ CURSOR_JS = """
     : install();
 })()
 """
+
+
+@dataclass(frozen=True)
+class TourResult:
+    global_search_query: str
+    intent_id: str
+    scenario_id: str
+    graph_query: str
+    selected_node: str
+    glossary_query: str
+    glossary_consumers: int
 
 SMOOTH_SCROLL_JS = """
 ([target, ms]) => new Promise(resolve => {
@@ -113,15 +125,21 @@ class Cursor:
             self.page.wait_for_timeout(33)
         self.x, self.y = x, y
 
-    def click(self, selector: str, settle_ms: int = 250) -> None:
-        box = self.page.locator(selector).bounding_box()
+    def click(self, target: str | Locator, settle_ms: int = 250) -> None:
+        locator = self.page.locator(target) if isinstance(target, str) else target
+        box = locator.bounding_box()
         if box is None:
-            raise RuntimeError(f"no bounding box for {selector!r}")
+            raise RuntimeError(f"no bounding box for {target!r}")
         self.move_to(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
         self.page.wait_for_timeout(settle_ms)
         self.page.mouse.down()
         self.page.wait_for_timeout(280)
         self.page.mouse.up()
+
+    def type(self, target: str | Locator, value: str, delay_ms: int = 70) -> None:
+        locator = self.page.locator(target) if isinstance(target, str) else target
+        self.click(locator)
+        self.page.keyboard.type(value, delay=delay_ms)
 
 
 def scroll_to(
@@ -141,8 +159,8 @@ def enforce_gif_size(gif: Path) -> None:
         )
 
 
-def tour(page: Page, base: str) -> None:
-    """The scripted visit; roughly 25 seconds of footage."""
+def tour(page: Page, base: str) -> TourResult:
+    """Showcase the v0.11 preview and return its semantic checkpoints."""
     wait = page.wait_for_timeout
     cursor = Cursor(page)
 
@@ -150,69 +168,78 @@ def tour(page: Page, base: str) -> None:
     page.goto(f"{base}/index.html")
     page.get_by_role("heading", name="Dashboard").wait_for()
     cursor.show()
-    wait(1600)
+    wait(1200)
 
-    # Intent index: scan the catalogue before opening a representative intent.
-    cursor.click('a.app-header__link[href="#/intents"]')
-    page.wait_for_url("**/index.html#/intents")
-    page.get_by_role("heading", name="Intents").wait_for()
-    wait(900)
-    intent_link = 'a[href="#/intent/INT-0008"]'
-    scroll_to(page, intent_link, margin=180, duration_ms=700)
-    wait(500)
-    cursor.click(intent_link)
+    # Global search: jump directly from a business term to its owning intent.
+    global_search_query = "starvation"
+    search_button = page.get_by_role("button", name="Search all Telos entities")
+    cursor.click(search_button)
+    dialog = page.get_by_role("dialog", name="Search Telos")
+    global_input = dialog.get_by_role(
+        "combobox", name="Search all Telos entities"
+    )
+    cursor.type(global_input, global_search_query)
+    global_result = dialog.get_by_role("option").filter(has_text="INT-0008")
+    global_result.wait_for()
+    wait(700)
+    cursor.click(global_result)
     page.wait_for_url("**/index.html#/intent/INT-0008")
     page.get_by_role(
         "heading", name="INT-0008 — Starvation is not a lifestyle"
     ).wait_for()
-    wait(900)
+    statement = page.locator(".statement-card").filter(has_text="unwanted")
+    statement.wait_for()
+    wait(1100)
 
-    # Intent detail: reveal the canonical declaration, then its proved scenario.
-    cursor.click("details summary")
-    wait(1300)
-    cursor.click("details summary")
-    wait(300)
+    # Intent detail: reveal the canonical statement and its proved scenario.
     scroll_to(page, "#scenario-SCN-0011", margin=180)
-    wait(1300)
+    scenario = page.locator("#scenario-SCN-0011").filter(
+        has_text="scenario SCN-0011"
+    )
+    scenario.wait_for()
+    wait(1200)
 
-    # Graph: overview, relation filtering, then inspect a representative node.
-    cursor.click('a.app-header__link[href="#/graph"]')
+    # Graph finder: locate the same intent and focus its dependency node.
+    cursor.click(page.get_by_role("link", name="Graph", exact=True))
     page.wait_for_url("**/index.html#/graph")
     page.get_by_role("heading", name="Graph", exact=True).wait_for()
     page.locator(".cyto-graph__canvas").wait_for()
-    wait(1400)
-
-    relation_filter = 'select[aria-label="Filter graph by relation"]'
-    cursor.click(relation_filter)
-    page.locator(relation_filter).select_option("requires")
     wait(900)
-    cursor.click('button[data-graph-action="fit"]')
-    wait(500)
+    graph_query = "INT-0008"
+    graph_input = page.get_by_label("Find node")
+    cursor.type(graph_input, graph_query)
+    graph_result = page.get_by_role("option").filter(has_text="INT-0008")
+    graph_result.wait_for()
+    wait(700)
+    cursor.click(graph_result)
+    selected = page.locator(".selection-panel__id").filter(has_text="INT-0008")
+    selected.wait_for()
+    wait(1300)
 
-    graph_canvas = page.locator(".cyto-graph__canvas")
-    graph = graph_canvas.bounding_box()
-    if graph is None:
-        raise RuntimeError("no bounding box for the dependency graph")
-    node = graph_canvas.evaluate(
-        """
-        element => {
-          const cy = element._cyreg?.cy;
-          if (!cy) throw new Error("Cytoscape instance is unavailable");
-          const intent = cy.getElementById("intent:INT-0008");
-          if (intent.empty()) throw new Error("INT-0008 is absent from the graph");
-          return intent.renderedPosition();
-        }
-        """
+    # Glossary: expose the domain notion and its recorded consumers.
+    cursor.click(page.get_by_role("link", name="Glossary", exact=True))
+    page.wait_for_url("**/index.html#/glossary")
+    page.get_by_role("heading", name="Glossary", exact=True).wait_for()
+    glossary_query = "Pet"
+    glossary_input = page.get_by_label("Search glossary")
+    cursor.type(glossary_input, glossary_query)
+    wait(500)
+    pet_card_selector = '[id="notion-pet/Pet"]'
+    scroll_to(page, pet_card_selector, margin=150)
+    pet_card = page.locator(pet_card_selector)
+    pet_card.get_by_label("Used by entities").wait_for()
+    consumer_count = pet_card.locator("tbody tr").count()
+    wait(1500)
+
+    return TourResult(
+        global_search_query=global_search_query,
+        intent_id="INT-0008",
+        scenario_id="SCN-0011",
+        graph_query=graph_query,
+        selected_node="INT-0008",
+        glossary_query=glossary_query,
+        glossary_consumers=consumer_count,
     )
-    cursor.move_to(
-        graph["x"] + node["x"],
-        graph["y"] + node["y"],
-    )
-    page.mouse.down()
-    wait(280)
-    page.mouse.up()
-    page.locator(".selection-panel__id").wait_for()
-    wait(1800)
 
 
 def record(site: Path, workdir: Path) -> Path:
