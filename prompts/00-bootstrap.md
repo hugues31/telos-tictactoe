@@ -43,6 +43,7 @@ The `.gitignore` first, so no cache ever pollutes a version commit:
 __pycache__/
 .pytest_cache/
 .venv/
+.worktrees/
 site/
 docs/demo.mp4
 ```
