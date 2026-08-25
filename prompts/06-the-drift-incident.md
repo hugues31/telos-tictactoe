@@ -12,7 +12,7 @@ trace except understanding.
 
 ## Your mission
 
-> Vandalize `telos/notions/Pet.tel` directly on disk. Watch `telos
+> Vandalize `telos/contexts/pet/notions/Pet.tel` directly on disk. Watch `telos
 > status` flip to `drifted` and every mutating command refuse to run.
 > Then choose one of the two exits — `telos adopt` (capture the edit as
 > a reviewable change) or `telos revert` (restore the sealed bytes) —
@@ -28,9 +28,9 @@ them, or not at all.
 The vandalism — a hand edit that softens the pet's definition
 (`depends entirely on` becomes `mildly tolerates`):
 
-<!-- replay:write telos/notions/Pet.tel -->
+<!-- replay:write telos/contexts/pet/notions/Pet.tel -->
 ```text
-notion Pet entity {
+notion pet/Pet entity {
   def  "A small creature that mildly tolerates its Owner."
   attr name      string
   attr hunger    int

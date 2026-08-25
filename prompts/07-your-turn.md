@@ -32,7 +32,7 @@ installed in `.claude/skills/` know this dance):
 
 1. `telos status --json` — always first.
 2. `telos change open "the dead are beyond events" --json`
-3. `telos impact Pet --json` — see what your change will ripple through.
+3. `telos impact NOT:pet/Pet --json` — see what your change will ripple through.
 4. Stage an **unwanted** intent (`if Pet.status == dead`), with one
    scenario per event you silence. Decide for yourself: does the clock
    still tick for the dead? Does `age` freeze too?

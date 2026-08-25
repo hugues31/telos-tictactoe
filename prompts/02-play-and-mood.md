@@ -31,7 +31,7 @@ telos change open "a pet needs joy, and joy needs appetite" --json
 
 <!-- replay:cmd -->
 ```console
-telos edit notion Pet --change CHG-0002 --json
+telos edit notion pet/Pet --change CHG-0002 --json
 ```
 ```json
 {"attrs": [{"name": "name", "type": "string"},
@@ -47,7 +47,7 @@ telos edit notion Pet --change CHG-0002 --json
 telos add notion --change CHG-0002 --json
 ```
 ```json
-{"name": "PlayWithPet", "kind": "event",
+{"owner": "pet/care", "name": "PlayWithPet", "kind": "event",
  "def": "A game of chase-the-cursor with the pet."}
 ```
 <!-- replay:end -->
@@ -57,7 +57,8 @@ telos add notion --change CHG-0002 --json
 telos add intent --change CHG-0002 --json
 ```
 ```json
-{"title": "Playing lifts the mood (and works up an appetite)",
+{"owner": "pet/care",
+ "title": "Playing lifts the mood (and works up an appetite)",
  "status": "active",
  "telos": "Joy is the only gauge an Owner cannot refill with a spoon.",
  "statement": {"template": "event-driven", "when": "PlayWithPet", "on": "Pet",

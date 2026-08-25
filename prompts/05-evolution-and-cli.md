@@ -32,7 +32,7 @@ telos change open "let the pet grow up and be seen" --json
 
 <!-- replay:cmd -->
 ```console
-telos edit notion Pet --change CHG-0005 --json
+telos edit notion pet/Pet --change CHG-0005 --json
 ```
 ```json
 {"attrs": [{"name": "name", "type": "string"},
@@ -48,12 +48,35 @@ telos edit notion Pet --change CHG-0005 --json
 ```
 <!-- replay:end -->
 
+The terminal is a supporting context. It consumes a mapped projection of
+the pet instead of taking ownership of pet rules:
+
+<!-- replay:cmd -->
+```console
+telos add context --change CHG-0005 --json
+```
+```json
+{"id": "terminal", "kind": "supporting", "title": "Terminal",
+ "def": "Presents a local projection of the pet without owning pet rules."}
+```
+<!-- replay:end -->
+
+<!-- replay:cmd -->
+```console
+telos add capability --change CHG-0005 --json
+```
+```json
+{"owner": "terminal", "id": "portrait", "title": "Portrait",
+ "def": "Renders the terminal's local pet view as ASCII art."}
+```
+<!-- replay:end -->
+
 <!-- replay:cmd -->
 ```console
 telos add notion --change CHG-0005 --json
 ```
 ```json
-{"name": "RenderRequested", "kind": "event",
+{"owner": "terminal/portrait", "name": "RenderRequested", "kind": "event",
  "def": "Someone wants to look at the pet."}
 ```
 <!-- replay:end -->
@@ -63,9 +86,21 @@ telos add notion --change CHG-0005 --json
 telos add notion --change CHG-0005 --json
 ```
 ```json
-{"name": "Portrait", "kind": "value",
+{"owner": "terminal/portrait", "name": "Portrait", "kind": "value",
  "def": "An ASCII rendering of the pet, at least a few lines tall.",
  "attrs": [{"name": "lines", "type": "int"}]}
+```
+<!-- replay:end -->
+
+<!-- replay:cmd -->
+```console
+telos add notion --change CHG-0005 --json
+```
+```json
+{"owner": "terminal/portrait", "name": "PetView", "kind": "entity",
+ "def": "The terminal's local projection of a pet.",
+ "attrs": [{"name": "stage", "type": "enum",
+            "values": ["egg", "baby", "child", "adult"]}]}
 ```
 <!-- replay:end -->
 
@@ -74,7 +109,7 @@ telos add notion --change CHG-0005 --json
 telos add intent --change CHG-0005 --json
 ```
 ```json
-{"title": "Pets grow up", "status": "active",
+{"owner": "pet/lifecycle", "title": "Pets grow up", "status": "active",
  "telos": "A pet frozen at one age is a photograph; care should have a future tense.",
  "statement": {"template": "event-driven", "when": "TimeTicks", "on": "Pet",
                "action": "advance Pet.age each tick; babies become children at 10, children become adults at 25"},
@@ -98,7 +133,7 @@ telos add intent --change CHG-0005 --json
 telos add intent --change CHG-0005 --json
 ```
 ```json
-{"title": "Adults are harder to please", "status": "active",
+{"owner": "pet/care", "title": "Adults are harder to please", "status": "active",
  "telos": "Growing up means the same game brings a smaller joy.",
  "statement": {"template": "event-driven", "when": "PlayWithPet", "on": "Pet",
                "action": "when the pet is an adult, raise Pet.happiness by only 10"},
@@ -118,13 +153,13 @@ telos add intent --change CHG-0005 --json
 telos add intent --change CHG-0005 --json
 ```
 ```json
-{"title": "A face for the terminal", "status": "active",
+{"owner": "terminal/portrait", "title": "A face for the terminal", "status": "active",
  "telos": "You cannot love what you cannot see.",
  "statement": {"template": "optional", "where": "ascii-art",
                "action": "render the pet as a multi-line ASCII portrait"},
  "scenarios": [
    {"title": "a portrait is at least a few lines tall",
-    "given": [{"notion": "Pet", "fields": {"stage": "baby"}}],
+    "given": [{"notion": "PetView", "fields": {"stage": "baby"}}],
     "when": {"notion": "RenderRequested", "fields": {}},
     "then": ["Portrait.lines >= 3"]}]}
 ```
@@ -135,10 +170,25 @@ telos add intent --change CHG-0005 --json
 telos add constraint --change CHG-0005 --json
 ```
 ```json
-{"kind": "architecture", "title": "The domain never looks at the screen",
+{"owner": "project", "kind": "architecture", "title": "The domain never looks at the screen",
  "rule": {"text": "tamagotchi/pet.py must not import the rendering or CLI layers (tamagotchi.render, tamagotchi.cli, argparse, curses)."},
  "scope": "global",
  "check": "python3 tools/check_imports.py"}
+```
+<!-- replay:end -->
+
+The context map publishes the pet projection consumed by the terminal:
+
+<!-- replay:cmd -->
+```console
+telos map --change CHG-0005 --json
+```
+```tel
+context-map {
+  dependency terminal on pet {
+    map pet/Pet -> terminal/PetView
+  }
+}
 ```
 <!-- replay:end -->
 
@@ -718,6 +768,15 @@ def _grow(pet: Pet) -> None:
 <!-- replay:cmd -->
 ```console
 telos change reconcile CHG-0005 --json
+```
+<!-- replay:end -->
+
+The public replay finishes with the same change-independent full seal as
+the current repository:
+
+<!-- replay:cmd -->
+```console
+telos change reconcile --full --json
 ```
 <!-- replay:end -->
 

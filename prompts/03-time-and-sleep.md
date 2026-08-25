@@ -31,7 +31,7 @@ telos change open "let time pass, let the pet rest" --json
 
 <!-- replay:cmd -->
 ```console
-telos edit notion Pet --change CHG-0003 --json
+telos edit notion pet/Pet --change CHG-0003 --json
 ```
 ```json
 {"attrs": [{"name": "name", "type": "string"},
@@ -49,7 +49,7 @@ telos edit notion Pet --change CHG-0003 --json
 telos add notion --change CHG-0003 --json
 ```
 ```json
-{"name": "TimeTicks", "kind": "event",
+{"owner": "pet", "name": "TimeTicks", "kind": "event",
  "def": "The world's heartbeat; everything ages by one beat."}
 ```
 <!-- replay:end -->
@@ -59,7 +59,7 @@ telos add notion --change CHG-0003 --json
 telos add notion --change CHG-0003 --json
 ```
 ```json
-{"name": "PutPetToBed", "kind": "event",
+{"owner": "pet/care", "name": "PutPetToBed", "kind": "event",
  "def": "The Owner dims the lights and tucks the pet in."}
 ```
 <!-- replay:end -->
@@ -69,7 +69,7 @@ telos add notion --change CHG-0003 --json
 telos add intent --change CHG-0003 --json
 ```
 ```json
-{"title": "Time gnaws at a waking pet", "status": "active",
+{"owner": "pet/lifecycle", "title": "Time gnaws at a waking pet", "status": "active",
  "telos": "A pet no clock can touch is a paperweight, not a companion.",
  "statement": {"template": "event-driven", "when": "TimeTicks", "on": "Pet",
                "action": "raise Pet.hunger by 5 and drain Pet.energy by 10 while awake"},
@@ -89,7 +89,7 @@ telos add intent --change CHG-0003 --json
 telos add intent --change CHG-0003 --json
 ```
 ```json
-{"title": "A pet put to bed falls asleep", "status": "active",
+{"owner": "pet/care", "title": "A pet put to bed falls asleep", "status": "active",
  "telos": "Rest must be a gift the Owner can give.",
  "statement": {"template": "event-driven", "when": "PutPetToBed", "on": "Pet",
                "action": "set Pet.activity = asleep"},
@@ -108,7 +108,7 @@ telos add intent --change CHG-0003 --json
 telos add intent --change CHG-0003 --json
 ```
 ```json
-{"title": "Sleep restores what the day spent", "status": "active",
+{"owner": "pet/care", "title": "Sleep restores what the day spent", "status": "active",
  "telos": "Sleep is the one meal hunger cannot interrupt.",
  "statement": {"template": "state-driven",
                "while": "Pet.activity == asleep",
@@ -135,7 +135,7 @@ telos add intent --change CHG-0003 --json
 telos add intent --change CHG-0003 --json
 ```
 ```json
-{"title": "No games with a sleeping pet", "status": "active",
+{"owner": "pet/care", "title": "No games with a sleeping pet", "status": "active",
  "telos": "An Owner who wakes a pet for fun teaches it to fear the night.",
  "statement": {"template": "unwanted",
                "if": "Pet.activity == asleep",

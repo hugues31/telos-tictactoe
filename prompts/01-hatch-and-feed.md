@@ -12,7 +12,7 @@ The nest is sealed and empty. Time for an egg — and for the first hunger.
 > Then state two intents in EARS form: *hatching brings a pet to life*
 > (event-driven, `set Pet.stage = baby`) and *feeding takes the edge off
 > hunger* (feeding reduces hunger by 30, never below zero). Configure the
-> test runner for Python (`pytest -q -k {filter}`, code under
+> test runner for Python (`pytest -q -k '{filter}'`, code under
 > `tamagotchi/`, tests under `tests/`, strict TDD). Review the diff,
 > approve it, then implement scenario by scenario: red witness, code,
 > green witness, bind, reconcile. Tag the result v0.1.0.
@@ -32,6 +32,41 @@ telos change open "hatch a pet and keep it fed" --json
 ```
 <!-- replay:end -->
 
+### The bounded domain
+
+Telos v0.11 owns every notion and intent through a context and, for
+behaviour, a capability. Establish those boundaries before vocabulary:
+
+<!-- replay:cmd -->
+```console
+telos add context --change CHG-0001 --json
+```
+```json
+{"id": "pet", "kind": "core", "title": "Pet",
+ "def": "Owns the virtual pet lifecycle, care rules and vital invariants."}
+```
+<!-- replay:end -->
+
+<!-- replay:cmd -->
+```console
+telos add capability --change CHG-0001 --json
+```
+```json
+{"owner": "pet", "id": "lifecycle", "title": "Lifecycle",
+ "def": "Governs hatching, time, growth, vitals and death."}
+```
+<!-- replay:end -->
+
+<!-- replay:cmd -->
+```console
+telos add capability --change CHG-0001 --json
+```
+```json
+{"owner": "pet", "id": "care", "title": "Care",
+ "def": "Governs feeding, play and sleep interactions."}
+```
+<!-- replay:end -->
+
 ### The domain, as typed notions
 
 <!-- replay:cmd -->
@@ -39,7 +74,7 @@ telos change open "hatch a pet and keep it fed" --json
 telos add notion --change CHG-0001 --json
 ```
 ```json
-{"name": "Owner", "kind": "actor",
+{"owner": "pet", "name": "Owner", "kind": "actor",
  "def": "The human who keeps the pet alive, mostly out of love.",
  "attrs": [{"name": "name", "type": "string"}]}
 ```
@@ -50,7 +85,7 @@ telos add notion --change CHG-0001 --json
 telos add notion --change CHG-0001 --json
 ```
 ```json
-{"name": "Pet", "kind": "entity",
+{"owner": "pet", "name": "Pet", "kind": "entity",
  "def": "A small creature that depends entirely on its Owner.",
  "attrs": [{"name": "name", "type": "string"},
            {"name": "hunger", "type": "int"},
@@ -64,7 +99,7 @@ telos add notion --change CHG-0001 --json
 telos add notion --change CHG-0001 --json
 ```
 ```json
-{"name": "HatchPet", "kind": "event",
+{"owner": "pet/lifecycle", "name": "HatchPet", "kind": "event",
  "def": "The egg is warmed until it cracks."}
 ```
 <!-- replay:end -->
@@ -74,7 +109,7 @@ telos add notion --change CHG-0001 --json
 telos add notion --change CHG-0001 --json
 ```
 ```json
-{"name": "FeedPet", "kind": "event",
+{"owner": "pet/care", "name": "FeedPet", "kind": "event",
  "def": "A meal is offered to the pet."}
 ```
 <!-- replay:end -->
@@ -86,7 +121,7 @@ telos add notion --change CHG-0001 --json
 telos add intent --change CHG-0001 --json
 ```
 ```json
-{"title": "Hatching brings a pet to life", "status": "active",
+{"owner": "pet/lifecycle", "title": "Hatching brings a pet to life", "status": "active",
  "telos": "An egg that never hatches is just a stone with ambitions.",
  "statement": {"template": "event-driven", "when": "HatchPet", "on": "Pet",
                "action": "set Pet.stage = baby"},
@@ -104,7 +139,7 @@ telos add intent --change CHG-0001 --json
 telos add intent --change CHG-0001 --json
 ```
 ```json
-{"title": "Feeding takes the edge off hunger", "status": "active",
+{"owner": "pet/care", "title": "Feeding takes the edge off hunger", "status": "active",
  "telos": "A hungry pet cannot trust an Owner who only watches.",
  "statement": {"template": "event-driven", "when": "FeedPet", "on": "Pet",
                "action": "reduce Pet.hunger by 30, never below zero"},
@@ -131,9 +166,10 @@ the change:
 telos config --change CHG-0001 --json
 ```
 ```json
-{"code": {"globs": ["pytest.ini", "tamagotchi/**/*.py"]},
+{"code": {"globs": ["tamagotchi/__main__.py", "tamagotchi/cli.py",
+                      "tamagotchi/pet.py", "tamagotchi/render.py"]},
  "tests": {"globs": ["tests/**/*.py"]},
- "test": {"cmd": "pytest -q -k {filter}"},
+ "test": {"cmd": "pytest -q -k '{filter}'"},
  "policy": {"tdd": "strict"},
  "agents": {"hosts": ["claude"]}}
 ```
@@ -272,8 +308,6 @@ Bind the files to the intents they implement, then collect the greens:
 
 <!-- replay:cmd -->
 ```console
-telos bind pytest.ini INT-0001 --json
-telos bind tamagotchi/__init__.py INT-0001 --json
 telos bind tamagotchi/pet.py INT-0001 --json
 telos bind tamagotchi/pet.py INT-0002 --json
 ```

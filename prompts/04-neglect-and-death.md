@@ -32,7 +32,7 @@ telos change open "give neglect its consequences" --json
 
 <!-- replay:cmd -->
 ```console
-telos edit notion Pet --change CHG-0004 --json
+telos edit notion pet/Pet --change CHG-0004 --json
 ```
 ```json
 {"attrs": [{"name": "name", "type": "string"},
@@ -51,7 +51,7 @@ telos edit notion Pet --change CHG-0004 --json
 telos add intent --change CHG-0004 --json
 ```
 ```json
-{"title": "Starvation is not a lifestyle", "status": "active",
+{"owner": "pet/lifecycle", "title": "Starvation is not a lifestyle", "status": "active",
  "telos": "A pet that cannot die makes neglect free, and care meaningless.",
  "statement": {"template": "unwanted",
                "if": "Pet.hunger >= 100",
@@ -72,7 +72,7 @@ telos add intent --change CHG-0004 --json
 telos add intent --change CHG-0004 --json
 ```
 ```json
-{"title": "Vitals stay on the dial", "status": "active",
+{"owner": "pet/lifecycle", "title": "Vitals stay on the dial", "status": "active",
  "telos": "A gauge that reads 130 is a lie wearing a number.",
  "statement": {"template": "ubiquitous",
                "action": "clamp Pet.hunger, Pet.happiness and Pet.energy to 0..100"},
@@ -97,7 +97,7 @@ telos add intent --change CHG-0004 --json
 telos add constraint --change CHG-0004 --json
 ```
 ```json
-{"kind": "quality", "title": "No gauge ever leaves the dial",
+{"owner": "pet", "kind": "quality", "title": "No gauge ever leaves the dial",
  "rule": {"text": "After any sequence of events, hunger, happiness and energy read between 0 and 100."},
  "scope": "global",
  "check": "python3 tools/check_vitals.py"}
