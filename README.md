@@ -21,6 +21,14 @@ red-then-green test witness, and 2 constraints with executable checks. The Pytho
 [`tamagotchi/`](tamagotchi/) is just *one possible solution* of that
 spec — Telos happens to be written in Rust, and does not care.
 
+## See Telos in action
+
+[![Animated walkthrough of Momo's Telos specification](docs/demo.gif)](https://hugues31.github.io/telos-tamagotchi/)
+
+> ### [Explore Momo's live specification →](https://hugues31.github.io/telos-tamagotchi/)
+>
+> Browse its bounded contexts, intents, scenarios, dependency graph, and glossary.
+
 ## Meet the pet
 
 ```console
