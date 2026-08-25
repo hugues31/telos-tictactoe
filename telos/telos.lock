@@ -1,5 +1,5 @@
 version = 2
-tool = "telos 0.9.0"
+tool = "telos 0.11.0"
 spec_digest = "sha256:80a906b39cfc5b74507a2c9f17e6e71382d124802645ce85047828720c100760"
 
 [spec]
