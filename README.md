@@ -25,7 +25,7 @@ spec — Telos happens to be written in Rust, and does not care.
 
 ```console
 # 1. Telos — a single binary, checksum-verified; only git is needed at runtime
-curl -fsSL https://raw.githubusercontent.com/hugues31/telos-sdd/main/install.sh | TELOS_VERSION=v0.9.0 sh
+curl -fsSL https://raw.githubusercontent.com/hugues31/telos-sdd/main/install.sh | TELOS_VERSION=v0.11.0 sh
 export PATH="$HOME/.local/bin:$PATH"
 
 # 2. pytest (Telos invokes it to seal test verdicts)
@@ -76,22 +76,21 @@ Three ways, same story:
   directory:
 
   ```console
-  python3 tools/replay.py --target /tmp/momo
+  python3 tools/replay.py --target /tmp/momo --compare
   ```
 
-  The replay intentionally stays pinned to Telos 0.8.2 and reconstructs the
-  tagged v0.5 story. The current `main` then demonstrates the Telos 0.9
-  migration to bounded contexts and capabilities.
+  The replay and checked-in model both use Telos 0.11.0. The final comparison
+  proves the reconstructed files match this repository byte-for-byte.
 
 ## This demo is also an end-to-end test
 
-CI replays the historical story from an empty directory on every push
-with its original Telos 0.8.2 toolchain
+CI replays the complete story from an empty directory on every push
+with the same Telos 0.11.0 toolchain
 ([demo.yml](.github/workflows/demo.yml)), proving in one run: `init`,
 config staging, five change transactions, 21 sealed witnesses, two
 executable constraint checks, one deliberate constraint failure, drift
 detection and revert — through the public CLI only. A second workflow
-([telos.yml](.github/workflows/telos.yml)) gates the current Telos 0.9 model
+([telos.yml](.github/workflows/telos.yml)) gates the current Telos 0.11 model
 on every push with `telos check --sealed`. The `pages` job publishes
 `telos view --export` — browse
 Momo's soul at
@@ -115,11 +114,9 @@ tools/check_*.py  the constraints' executable checks (fuzzer, AST import guard)
 - `telos/` is sealed: edit it by hand and every workflow command
   refuses to run until you `adopt` or `revert`
   ([prompt 06](prompts/06-the-drift-incident.md) does it on purpose).
-- The runner is `pytest -q -k {filter}` and Telos substitutes the
-  discovered test's name. Avoid `telos change reconcile --full` in this
-  project: with active intents but an empty filter it would call
-  a bare `pytest -q -k`. The normal per-change `reconcile` is the whole
-  story here; `--full` exists for merge-conflict recovery.
+- The runner is `pytest -q -k '{filter}'` and Telos substitutes the
+  discovered test's name. The quoted placeholder also keeps full-suite
+  reconciliation valid by passing an empty expression to `-k`.
 - Scenario ids are allocated in staging order. Replay from scratch and
   you get the same ids; stage in another order and yours will differ —
   read ids from the CLI's JSON, never assume.

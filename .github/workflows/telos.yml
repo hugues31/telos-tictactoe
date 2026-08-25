@@ -13,9 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Install Telos v0.9.0
+      - name: Install Telos v0.11.0
         run: |
-          version=0.9.0
+          version=0.11.0
           asset="telos_${version}_linux_amd64.tar.gz"
           base="https://github.com/hugues31/telos-sdd/releases/download/v${version}"
           cd "$RUNNER_TEMP"

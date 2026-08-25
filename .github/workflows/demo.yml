@@ -17,9 +17,9 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install "pytest>=7"
-      - name: Install Telos v0.8.2
+      - name: Install Telos v0.11.0
         run: |
-          version=0.8.2
+          version=0.11.0
           asset="telos_${version}_linux_amd64.tar.gz"
           base="https://github.com/hugues31/telos-sdd/releases/download/v${version}"
           cd "$RUNNER_TEMP"
@@ -29,11 +29,11 @@ jobs:
           tar -xzf "${asset}"
           install -D -m 0755 telos "$HOME/.local/bin/telos"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-      - name: Replay the historical story from a blank directory
+      - name: Replay the complete story from a blank directory
         run: |
           git config --global user.name  "Telos Demo Replay"
           git config --global user.email "replay@example.invalid"
-          python3 tools/replay.py --target "$(mktemp -d)"
+          python3 tools/replay.py --target "$(mktemp -d)" --compare
 
   pages:
     if: github.ref == 'refs/heads/main'
@@ -48,9 +48,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - name: Install Telos v0.9.0
+      - name: Install Telos v0.11.0
         run: |
-          version=0.9.0
+          version=0.11.0
           asset="telos_${version}_linux_amd64.tar.gz"
           base="https://github.com/hugues31/telos-sdd/releases/download/v${version}"
           cd "$RUNNER_TEMP"
