@@ -1,0 +1,4 @@
+notion terminal/portrait/PetView entity {
+  def  "The terminal's local projection of a pet."
+  attr stage enum(egg, baby, child, adult)
+}

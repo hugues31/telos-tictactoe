@@ -1,0 +1,4 @@
+implements "tamagotchi/__main__.py" -> INT-0012
+implements "tamagotchi/cli.py" -> INT-0012
+implements "tamagotchi/render.py" -> INT-0012
+proves     "tests/test_portrait.py::scn_0017_a_portrait_is_at_least_a_few_lines_tall" -> SCN-0017

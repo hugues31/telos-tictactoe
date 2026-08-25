@@ -1,0 +1,28 @@
+intent INT-0002 in pet/care "Feeding takes the edge off hunger" {
+  status active
+  telos  "A hungry pet cannot trust an Owner who only watches."
+  statement event-driven {
+    when   FeedPet on Pet
+    system shall "reduce Pet.hunger by 30, never below zero"
+  }
+  requires INT-0001
+
+  scenario SCN-0002 "a meal takes the edge off hunger" {
+    given Pet { hunger: 80, stage: baby }
+    when  FeedPet {}
+    then  Pet.hunger == 50
+  }
+
+  scenario SCN-0003 "a full belly stays at zero" {
+    given Pet { hunger: 20, stage: baby }
+    when  FeedPet {}
+    then  Pet.hunger == 0
+  }
+
+  scenario SCN-0005 "every meal leaves a trace on the scale" {
+    given Pet { hunger: 80, stage: baby, weight: 1.20 }
+    when  FeedPet {}
+    then  Pet.hunger == 50
+    then  Pet.weight == 1.30
+  }
+}

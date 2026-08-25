@@ -1,11 +1,11 @@
 [code]
-globs = ["pytest.ini", "tamagotchi/**/*.py"]
+globs = ["tamagotchi/__main__.py", "tamagotchi/cli.py", "tamagotchi/pet.py", "tamagotchi/render.py"]
 
 [tests]
 globs = ["tests/**/*.py"]
 
 [test]
-cmd = "pytest -q -k {filter}"
+cmd = "pytest -q -k '{filter}'"
 
 [policy]
 tdd = "strict"

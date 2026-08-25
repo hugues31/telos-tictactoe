@@ -189,12 +189,24 @@ def tour(page: Page, base: str) -> None:
     cursor.click('button[data-graph-action="fit"]')
     wait(500)
 
-    graph = page.locator(".cyto-graph__canvas").bounding_box()
+    graph_canvas = page.locator(".cyto-graph__canvas")
+    graph = graph_canvas.bounding_box()
     if graph is None:
         raise RuntimeError("no bounding box for the dependency graph")
+    node = graph_canvas.evaluate(
+        """
+        element => {
+          const cy = element._cyreg?.cy;
+          if (!cy) throw new Error("Cytoscape instance is unavailable");
+          const intent = cy.getElementById("intent:INT-0008");
+          if (intent.empty()) throw new Error("INT-0008 is absent from the graph");
+          return intent.renderedPosition();
+        }
+        """
+    )
     cursor.move_to(
-        graph["x"] + graph["width"] / 2,
-        graph["y"] + graph["height"] * 0.31,
+        graph["x"] + node["x"],
+        graph["y"] + node["y"],
     )
     page.mouse.down()
     wait(280)

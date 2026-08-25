@@ -1,3 +1,0 @@
-notion RenderRequested event {
-  def  "Someone wants to look at the pet."
-}

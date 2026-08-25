@@ -1,0 +1,3 @@
+capability pet/care "Care" {
+  def "Governs feeding, play and sleep interactions."
+}

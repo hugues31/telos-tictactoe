@@ -1,0 +1,3 @@
+capability terminal/portrait "Portrait" {
+  def "Renders the terminal's local pet view as ASCII art."
+}

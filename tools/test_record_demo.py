@@ -114,7 +114,7 @@ class DemoTourTest(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "below 10.0 MB"):
                 enforce_gif_size(gif)
 
-    def test_tour_visits_the_telos_082_overview(self) -> None:
+    def test_tour_visits_the_telos_090_overview(self) -> None:
         with tempfile.TemporaryDirectory(prefix="telos-demo-test-") as tmp:
             site = Path(tmp) / "site"
             subprocess.run(["telos", "view", "--export", str(site)], check=True)
@@ -141,7 +141,7 @@ class DemoTourTest(unittest.TestCase):
                                 f"http://127.0.0.1:{server.server_address[1]}",
                             )
                         except Exception as error:
-                            self.fail(f"the Telos 0.8.2 tour did not complete: {error}")
+                            self.fail(f"the Telos 0.9.0 tour did not complete: {error}")
                         self.assertEqual(
                             ["/", "/intents", "/intent/INT-0008", "/graph"],
                             [route for route in dict.fromkeys(visited) if route],

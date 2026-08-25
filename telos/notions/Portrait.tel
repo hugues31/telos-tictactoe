@@ -1,4 +1,0 @@
-notion Portrait value {
-  def  "An ASCII rendering of the pet, at least a few lines tall."
-  attr lines int
-}

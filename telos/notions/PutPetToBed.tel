@@ -1,3 +1,0 @@
-notion PutPetToBed event {
-  def  "The Owner dims the lights and tucks the pet in."
-}

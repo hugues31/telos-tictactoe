@@ -1,0 +1,5 @@
+context-map {
+  dependency terminal on pet {
+    map pet/Pet -> terminal/PetView
+  }
+}

@@ -1,0 +1,3 @@
+context terminal supporting "Terminal" {
+  def "Presents a local projection of the pet without owning pet rules."
+}
