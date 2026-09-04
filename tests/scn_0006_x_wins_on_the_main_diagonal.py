@@ -7,4 +7,4 @@ def scn_0006_x_wins_on_the_main_diagonal():
     assert board.place_mark(PlaceMark(cell=9)) is True
     assert board.cells == "XO.OX...X"
     assert board.turn == "o"
-    assert board.outcome == "x-wins"
+    assert board.outcome == "o-wins"

@@ -7,4 +7,4 @@ def scn_0004_x_wins_across_the_top_row():
     assert board.place_mark(PlaceMark(cell=3)) is True
     assert board.cells == "XXXOO...."
     assert board.turn == "o"
-    assert board.outcome == "x-wins"
+    assert board.outcome == "o-wins"

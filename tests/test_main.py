@@ -18,11 +18,6 @@ def test_main_plays_rounds_until_a_player_wins_the_match() -> None:
             "2",
             "5",
             "3",
-            "1",
-            "4",
-            "2",
-            "5",
-            "3",
         ]
     )
     output = StringIO()
@@ -43,26 +38,19 @@ def test_main_plays_rounds_until_a_player_wins_the_match() -> None:
     assert _contains_sequence(
         lines,
         [
-            "X wins",
-            "X 1 - 0 O",
-            "Round 2. O starts.",
+            "X lined up three: O wins",
+            "X 0 - 1 O",
+            "Round 2. X starts.",
             " 1 | 2 | 3",
             " 4 | 5 | 6",
             " 7 | 8 | 9",
         ],
     )
-    assert _contains_sequence(
-        lines,
-        [
-            "O wins",
-            "X 1 - 1 O",
-            "Round 3. X starts.",
-            " 1 | 2 | 3",
-            " 4 | 5 | 6",
-            " 7 | 8 | 9",
-        ],
-    )
-    assert lines[-3:] == ["X wins", "X 2 - 1 O", "X wins the match"]
+    assert lines[-3:] == [
+        "X lined up three: O wins",
+        "X 0 - 2 O",
+        "O wins the match",
+    ]
 
 
 def _contains_sequence(lines: list[str], expected: list[str]) -> bool:

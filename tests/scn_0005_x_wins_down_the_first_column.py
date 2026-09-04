@@ -7,4 +7,4 @@ def scn_0005_x_wins_down_the_first_column():
     assert board.place_mark(PlaceMark(cell=7)) is True
     assert board.cells == "XO.XO.X.."
     assert board.turn == "o"
-    assert board.outcome == "x-wins"
+    assert board.outcome == "o-wins"

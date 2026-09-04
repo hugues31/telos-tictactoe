@@ -33,7 +33,7 @@ class Board:
         self.cells = f"{self.cells[:index]}{mark}{self.cells[index + 1:]}"
         self.turn = "o" if self.turn == "x" else "x"
         if any(all(self.cells[cell] == mark for cell in line) for line in WINNING_LINES):
-            self.outcome = f"{mark.lower()}-wins"
+            self.outcome = f"{self.turn}-wins"
         elif "." not in self.cells:
             self.outcome = "draw"
         return True

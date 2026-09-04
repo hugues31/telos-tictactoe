@@ -1,32 +1,32 @@
-intent INT-0003 in board/play "Win with three in a row" {
+intent INT-0003 in board/play "Lose with three in a row" {
   status active
-  telos  "A player wins by completing a row, column, or diagonal of three marks."
+  telos  "A player loses by completing a row, column, or diagonal of three marks; the other player wins the round."
   statement event-driven {
     when   PlaceMark on Board
     system shall "end the round when the placed mark completes three in a row"
   }
 
-  scenario SCN-0004 "X wins across the top row" {
+  scenario SCN-0004 "O wins when X completes the top row" {
     given Board { cells: "XX.OO....", outcome: playing, turn: x }
     when  PlaceMark { cell: 3 }
     then  Board.cells == "XXXOO...."
     then  Board.turn == o
-    then  Board.outcome == x-wins
+    then  Board.outcome == o-wins
   }
 
-  scenario SCN-0005 "X wins down the first column" {
+  scenario SCN-0005 "O wins when X completes the first column" {
     given Board { cells: "XO.XO....", outcome: playing, turn: x }
     when  PlaceMark { cell: 7 }
     then  Board.cells == "XO.XO.X.."
     then  Board.turn == o
-    then  Board.outcome == x-wins
+    then  Board.outcome == o-wins
   }
 
-  scenario SCN-0006 "X wins on the main diagonal" {
+  scenario SCN-0006 "O wins when X completes the main diagonal" {
     given Board { cells: "XO.OX....", outcome: playing, turn: x }
     when  PlaceMark { cell: 9 }
     then  Board.cells == "XO.OX...X"
     then  Board.turn == o
-    then  Board.outcome == x-wins
+    then  Board.outcome == o-wins
   }
 }

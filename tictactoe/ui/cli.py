@@ -40,8 +40,8 @@ def show_board(
     rows = [f" {visible[start]} | {visible[start + 1]} | {visible[start + 2]}" for start in (0, 3, 6)]
     statuses = {
         "playing": f"{view.turn.upper()} to play",
-        "x-wins": "X wins",
-        "o-wins": "O wins",
+        "x-wins": "O lined up three: X wins",
+        "o-wins": "X lined up three: O wins",
         "draw": "Draw",
     }
     score = "" if match_view is None else f"X {match_view.x_points} - {match_view.o_points} O"
