@@ -1,0 +1,47 @@
+# The definition of done for each prompt. tools/run_prompts.py reads it
+# after every prompt; a human replaying by hand reads it the same way.
+# Counts are what `telos status` reports once the prompt is complete.
+
+[runner]
+module = "tictactoe"
+
+["00-setup"]
+tag = "v0.0.0"
+intents = 0
+scenarios = 0
+
+["01-board-and-console"]
+tag = "v0.1.0"
+intents = 5
+scenarios = 9
+proof_evidence = "report"
+play = { input = "5\n1\n4\n2\n6\n", expect = [" 4 | X | 6", "X wins"] }
+
+["02-tournament"]
+tag = "v0.2.0"
+intents = 8
+scenarios = 14
+proof_evidence = "report"
+play = { input = "5\n1\n4\n2\n6\n", expect = ["X wins", "X 1 - 0 O", "Round 2. O starts."] }
+
+["03-misere"]
+tag = "v0.3.0"
+intents = 8
+scenarios = 14
+proof_evidence = "report"
+play = { input = "5\n1\n4\n2\n6\n", expect = ["X lined up three: O wins", "X 0 - 1 O", "Round 2. X starts."] }
+
+["04-window"]
+tag = "v0.4.0"
+intents = 10
+scenarios = 18
+constraints = 1
+proof_evidence = "report"
+play = { input = "5\n1\n4\n2\n6\n", expect = ["X lined up three: O wins", "X 0 - 1 O"] }
+help = { args = ["--help"], expect = ["--gui"] }
+
+["05-hotfix"]
+human_action = "revert"
+intents = 10
+scenarios = 18
+constraints = 1

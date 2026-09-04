@@ -1,0 +1,54 @@
+name: Prompts
+
+# Replays the prompts with a coding agent against a chosen Telos release.
+# Manual only: it spends API credits. Needs ANTHROPIC_API_KEY (claude) or
+# OPENAI_API_KEY (codex) in the repository secrets.
+
+on:
+  workflow_dispatch:
+    inputs:
+      agent:
+        description: "Coding agent"
+        type: choice
+        options: [claude, codex]
+        default: claude
+      telos_version:
+        description: "Telos release to replay against"
+        default: "0.13.0"
+
+permissions:
+  contents: read
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install "pytest>=7"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install the agent CLI
+        run: |
+          if [ "${{ inputs.agent }}" = "claude" ]; then
+            npm install -g @anthropic-ai/claude-code
+          else
+            npm install -g @openai/codex
+          fi
+      - name: Replay the prompts
+        run: |
+          git config --global user.name "Telos prompts runner"
+          git config --global user.email "runner@example.invalid"
+          python3 tools/run_prompts.py --agent "${{ inputs.agent }}" --telos-version "${{ inputs.telos_version }}" --target .worktrees/run --keep
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: replayed-project
+          path: .worktrees/run
+          include-hidden-files: true

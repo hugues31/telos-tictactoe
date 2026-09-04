@@ -2,3 +2,6 @@ __pycache__/
 .pytest_cache/
 .venv/
 junit.xml
+.worktrees/
+site/
+docs/demo.mp4
