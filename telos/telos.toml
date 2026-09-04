@@ -1,0 +1,15 @@
+[code]
+globs = []
+
+[tests]
+globs = []
+
+[test]
+cmd = ""
+report = ""
+
+[policy]
+tdd = "strict"
+
+[agents]
+hosts = ["claude", "codex"]

@@ -1,0 +1,10 @@
+version = 3
+tool = "telos 0.13.0"
+spec_digest = "sha256:daae41848315bbdfeb9cc14a2e355cabb58027b52c4289f8c5c2f790be509a97"
+proof_evidence = "exit-status"
+
+[spec]
+"telos/context-map.tel" = "67800ffd7fefe50b84d8d5e07f4820aaba672479"
+"telos/telos.toml" = "8f2a768e152a924f2122583d340205c340c721d9"
+
+[code]
