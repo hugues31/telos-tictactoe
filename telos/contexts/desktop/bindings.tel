@@ -1,0 +1,7 @@
+implements "tictactoe/ui/gui.py" -> INT-0009
+implements "tictactoe/ui/gui.py" -> INT-0010
+proves     "tests/scn_0015_x_takes_the_centre_and_the_window_shows_o_to_play.py::scn_0015_x_takes_the_centre_and_the_window_shows_o_to_play" -> SCN-0015
+proves     "tests/scn_0016_the_window_explains_o_wins_after_x_lines_up_three.py::scn_0016_the_window_explains_o_wins_after_x_lines_up_three" -> SCN-0016
+proves     "tests/scn_0017_the_losing_x_starts_the_next_round_with_the_clicked_cell.py::scn_0017_the_losing_x_starts_the_next_round_with_the_clicked_cell" -> SCN-0017
+proves     "tests/scn_0018_clicks_leave_a_completed_match_unchanged.py::scn_0018_clicks_leave_a_completed_match_unchanged" -> SCN-0018
+proves     "tests/test_main.py::scn_0018_clicks_leave_a_completed_match_unchanged_in_main_suite" -> SCN-0018

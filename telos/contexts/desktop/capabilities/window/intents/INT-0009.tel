@@ -1,0 +1,23 @@
+intent INT-0009 in desktop/window "Play a free cell and refresh the window" {
+  status active
+  telos  "A click on a free cell plays the current mark and refreshes all nine labels and the combined round and match status."
+  statement event-driven {
+    when   CellClicked on BoardView
+    system shall "play the current mark on a free cell and refresh the window"
+  }
+
+  scenario SCN-0015 "X takes the centre and the window shows O to play" {
+    given BoardView { cells: ".........", outcome: playing, turn: x }
+    given MatchView { o-points: 0, x-points: 0 }
+    when  CellClicked { cell: 5 }
+    then  Window.labels == "....X...."
+    then  Window.status == "O to play  X 0 - 0 O"
+  }
+
+  scenario SCN-0016 "The window explains O wins after X lines up three" {
+    given BoardView { cells: "XX.OO....", outcome: playing, turn: x }
+    given MatchView { o-points: 0, x-points: 0 }
+    when  CellClicked { cell: 3 }
+    then  Window.status == "X lined up three: O wins  X 0 - 1 O"
+  }
+}

@@ -1,0 +1,5 @@
+notion desktop/window/MatchView value {
+  def  "The match score published to the desktop for presentation and completion handling."
+  attr x-points int
+  attr o-points int
+}

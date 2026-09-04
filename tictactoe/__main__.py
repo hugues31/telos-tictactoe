@@ -1,3 +1,7 @@
+import argparse
+import sys
+from collections.abc import Sequence
+
 from tictactoe.domain.board import Board, PlaceMark
 from tictactoe.domain.tournament import Match, RoundResult, round_ended
 from tictactoe.ui.cli import BoardView, MatchView, show_board
@@ -29,7 +33,16 @@ def print_fresh_grid(board: Board) -> None:
     print(screen.row3)
 
 
-def main() -> None:
+def main(argv: Sequence[str] = ()) -> None:
+    parser = argparse.ArgumentParser(prog="python -m tictactoe")
+    parser.add_argument("--gui", action="store_true", help="open the graphical game")
+    args = parser.parse_args(argv)
+    if args.gui:
+        from tictactoe.ui.gui import run_gui
+
+        run_gui()
+        return
+
     match = Match()
     round_number = 1
     print("Best of 3. X starts.")
@@ -72,4 +85,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1:])

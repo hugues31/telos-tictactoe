@@ -56,3 +56,25 @@ def test_main_plays_rounds_until_a_player_wins_the_match() -> None:
 def _contains_sequence(lines: list[str], expected: list[str]) -> bool:
     width = len(expected)
     return any(lines[index : index + width] == expected for index in range(len(lines)))
+
+
+def scn_0018_clicks_leave_a_completed_match_unchanged_in_main_suite() -> None:
+    from tictactoe.domain.board import Board
+    from tictactoe.domain.tournament import Match
+    from tictactoe.ui.gui import CellClicked, WindowPresenter
+
+    presenter = WindowPresenter(
+        board=Board(cells="XXXOO....", turn="o", outcome="o-wins"),
+        match=Match(
+            x_points=0,
+            o_points=2,
+            target=2,
+            winner="o",
+            starter="x",
+        ),
+    )
+
+    window = presenter.cell_clicked(CellClicked(cell=5))
+
+    assert window.labels == "XXXOO...."
+    assert window.status == "O wins the match  X 0 - 2 O"

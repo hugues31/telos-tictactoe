@@ -1,0 +1,5 @@
+notion desktop/window/Window value {
+  def  "The nine cell labels and full match status shown in the graphical window."
+  attr labels string
+  attr status string
+}

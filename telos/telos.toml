@@ -1,5 +1,5 @@
 [code]
-globs = ["tictactoe/domain/board.py", "tictactoe/domain/tournament.py", "tictactoe/ui/cli.py"]
+globs = ["tictactoe/domain/board.py", "tictactoe/domain/tournament.py", "tictactoe/ui/cli.py", "tictactoe/ui/gui.py"]
 
 [tests]
 globs = ["tests/*.py"]

@@ -1,0 +1,3 @@
+capability desktop/window "Window" {
+  def "Keeps the graphical board and match status usable for two players sharing a mouse."
+}

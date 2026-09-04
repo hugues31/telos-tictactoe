@@ -1,0 +1,6 @@
+notion desktop/window/BoardView value {
+  def  "The board state published to the desktop for presentation and click handling."
+  attr cells   string
+  attr turn    enum(x, o)
+  attr outcome enum(playing, x-wins, o-wins, draw)
+}

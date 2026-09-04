@@ -1,0 +1,24 @@
+intent INT-0010 in desktop/window "Play the whole match through the window" {
+  status active
+  telos  "After a round ends, the next click starts a fresh round with the loser first and plays that cell; after the match ends, the final window remains unchanged."
+  statement event-driven {
+    when   CellClicked on MatchView
+    system shall "advance rounds until the match is won and ignore later clicks"
+  }
+
+  scenario SCN-0017 "The losing X starts the next round with the clicked cell" {
+    given BoardView { cells: "XXXOO....", outcome: o-wins, turn: o }
+    given MatchView { o-points: 1, x-points: 0 }
+    when  CellClicked { cell: 5 }
+    then  Window.labels == "....X...."
+    then  Window.status == "O to play  X 0 - 1 O"
+  }
+
+  scenario SCN-0018 "Clicks leave a completed match unchanged" {
+    given BoardView { cells: "XXXOO....", outcome: o-wins, turn: o }
+    given MatchView { o-points: 2, x-points: 0 }
+    when  CellClicked { cell: 5 }
+    then  Window.labels == "XXXOO...."
+    then  Window.status == "O wins the match  X 0 - 2 O"
+  }
+}

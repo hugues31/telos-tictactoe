@@ -1,0 +1,4 @@
+notion desktop/window/CellClicked event {
+  def  "A player clicks one of the nine cells in the graphical window."
+  attr cell int
+}
