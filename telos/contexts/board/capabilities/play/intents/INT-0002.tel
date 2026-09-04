@@ -1,0 +1,16 @@
+intent INT-0002 in board/play "Refuse an occupied cell" {
+  status active
+  telos  "A mark cannot replace a mark already on the board."
+  statement event-driven {
+    when   PlaceMark on Board
+    system shall "refuse an occupied cell without changing the board or turn"
+  }
+
+  scenario SCN-0003 "An occupied cell leaves the board and turn unchanged" {
+    given Board { cells: "....X....", outcome: playing, turn: o }
+    when  PlaceMark { cell: 5 }
+    then  Board.cells == "....X...."
+    then  Board.turn == o
+    then  Board.outcome == playing
+  }
+}

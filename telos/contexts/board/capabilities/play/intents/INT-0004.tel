@@ -1,0 +1,16 @@
+intent INT-0004 in board/play "Draw on a full board without a line" {
+  status active
+  telos  "A full board with no winning line ends the round as a draw."
+  statement event-driven {
+    when   PlaceMark on Board
+    system shall "end a full round without three in a row as a draw"
+  }
+
+  scenario SCN-0007 "The last free cell completes a draw" {
+    given Board { cells: "XOXXOOOX.", outcome: playing, turn: x }
+    when  PlaceMark { cell: 9 }
+    then  Board.cells == "XOXXOOOXX"
+    then  Board.turn == o
+    then  Board.outcome == draw
+  }
+}

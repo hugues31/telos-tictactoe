@@ -1,0 +1,3 @@
+context terminal supporting "Terminal" {
+  def "Presents one tic-tac-toe round to two players sharing a console."
+}

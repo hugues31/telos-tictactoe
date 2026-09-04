@@ -1,2 +1,5 @@
 context-map {
+  dependency terminal on board {
+    map board/Board -> terminal/BoardView
+  }
 }

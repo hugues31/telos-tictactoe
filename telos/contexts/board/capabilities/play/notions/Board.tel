@@ -1,0 +1,6 @@
+notion board/play/Board entity {
+  def  "The state of one tic-tac-toe round."
+  attr cells   string
+  attr turn    enum(x, o)
+  attr outcome enum(playing, x-wins, o-wins, draw)
+}

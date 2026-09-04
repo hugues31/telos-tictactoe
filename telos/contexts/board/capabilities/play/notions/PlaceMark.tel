@@ -1,0 +1,4 @@
+notion board/play/PlaceMark event {
+  def  "A request by the current player to place a mark in a numbered cell."
+  attr cell int
+}

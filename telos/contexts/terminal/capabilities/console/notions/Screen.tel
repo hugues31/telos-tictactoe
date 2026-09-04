@@ -1,0 +1,7 @@
+notion terminal/console/Screen value {
+  def  "The four lines rendered from a board view."
+  attr row1   string
+  attr row2   string
+  attr row3   string
+  attr status string
+}

@@ -1,0 +1,3 @@
+capability terminal/console "Console" {
+  def "Renders the board and round status for two players at one keyboard."
+}

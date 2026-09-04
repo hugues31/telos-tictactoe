@@ -1,12 +1,12 @@
 [code]
-globs = []
+globs = ["tictactoe/domain/board.py", "tictactoe/ui/cli.py"]
 
 [tests]
-globs = []
+globs = ["tests/*.py"]
 
 [test]
-cmd = ""
-report = ""
+cmd = "pytest -q --junitxml={report} -k '{filter}'"
+report = "junit.xml"
 
 [policy]
 tdd = "strict"

@@ -1,0 +1,3 @@
+notion terminal/console/ShowBoard event {
+  def  "A request to render the current board view."
+}

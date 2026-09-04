@@ -1,0 +1,3 @@
+capability board/play "Play" {
+  def "Accepts marks, advances turns, and determines the outcome of one round."
+}

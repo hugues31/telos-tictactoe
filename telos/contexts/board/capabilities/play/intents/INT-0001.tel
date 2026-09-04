@@ -1,0 +1,24 @@
+intent INT-0001 in board/play "Place a mark and pass the turn" {
+  status active
+  telos  "A mark occupies a free cell and hands play to the other player."
+  statement event-driven {
+    when   PlaceMark on Board
+    system shall "place the current mark on a free cell and pass the turn"
+  }
+
+  scenario SCN-0001 "X takes the centre and O plays next" {
+    given Board { cells: ".........", outcome: playing, turn: x }
+    when  PlaceMark { cell: 5 }
+    then  Board.cells == "....X...."
+    then  Board.turn == o
+    then  Board.outcome == playing
+  }
+
+  scenario SCN-0002 "O takes the first cell and X plays next" {
+    given Board { cells: "....X....", outcome: playing, turn: o }
+    when  PlaceMark { cell: 1 }
+    then  Board.cells == "O...X...."
+    then  Board.turn == x
+    then  Board.outcome == playing
+  }
+}

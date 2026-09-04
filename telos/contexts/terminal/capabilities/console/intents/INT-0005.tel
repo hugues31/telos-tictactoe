@@ -1,0 +1,26 @@
+intent INT-0005 in terminal/console "Show the numbered board and round status" {
+  status active
+  telos  "Players see marks, numbers for free cells, and either whose turn it is or the final outcome."
+  statement event-driven {
+    when   ShowBoard on BoardView
+    system shall "render the numbered grid and current round status"
+  }
+
+  scenario SCN-0008 "The screen numbers free cells and shows O to play" {
+    given BoardView { cells: "....X....", outcome: playing, turn: o }
+    when  ShowBoard {}
+    then  Screen.row1 == " 1 | 2 | 3"
+    then  Screen.row2 == " 4 | X | 6"
+    then  Screen.row3 == " 7 | 8 | 9"
+    then  Screen.status == "O to play"
+  }
+
+  scenario SCN-0009 "The screen announces an X win" {
+    given BoardView { cells: "XXXOO....", outcome: x-wins, turn: o }
+    when  ShowBoard {}
+    then  Screen.row1 == " X | X | X"
+    then  Screen.row2 == " O | O | 6"
+    then  Screen.row3 == " 7 | 8 | 9"
+    then  Screen.status == "X wins"
+  }
+}

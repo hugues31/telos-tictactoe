@@ -1,0 +1,3 @@
+implements "tictactoe/ui/cli.py" -> INT-0005
+proves     "tests/scn_0008_the_screen_numbers_free_cells_and_shows_o_to_play.py::scn_0008_the_screen_numbers_free_cells_and_shows_o_to_play" -> SCN-0008
+proves     "tests/scn_0009_the_screen_announces_an_x_win.py::scn_0009_the_screen_announces_an_x_win" -> SCN-0009

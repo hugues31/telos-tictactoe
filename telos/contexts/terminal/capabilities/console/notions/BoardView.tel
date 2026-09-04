@@ -1,0 +1,6 @@
+notion terminal/console/BoardView value {
+  def  "The board state published to the terminal for display."
+  attr cells   string
+  attr turn    enum(x, o)
+  attr outcome enum(playing, x-wins, o-wins, draw)
+}
