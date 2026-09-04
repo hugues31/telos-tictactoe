@@ -2,4 +2,10 @@ context-map {
   dependency terminal on board {
     map board/Board -> terminal/BoardView
   }
+  dependency terminal on tournament {
+    map tournament/Match -> terminal/MatchView
+  }
+  dependency tournament on board {
+    map board/Board -> tournament/RoundResult
+  }
 }

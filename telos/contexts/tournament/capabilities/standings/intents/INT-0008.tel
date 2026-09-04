@@ -1,0 +1,15 @@
+intent INT-0008 in tournament/standings "Choose the next round starter" {
+  status active
+  telos  "The loser of a won round starts next; after a draw, the player other than the current starter starts next."
+  statement event-driven {
+    when   RoundEnded on RoundResult
+    system shall "choose the next round starter from the completed round outcome"
+  }
+
+  scenario SCN-0013 "O starts after X wins a round that X started" {
+    given Match { o-points: 0, starter: x, target: 2, winner: none, x-points: 0 }
+    given RoundResult { outcome: x-wins }
+    when  RoundEnded {}
+    then  Match.starter == o
+  }
+}

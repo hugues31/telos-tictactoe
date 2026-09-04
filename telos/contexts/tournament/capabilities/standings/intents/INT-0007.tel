@@ -1,0 +1,15 @@
+intent INT-0007 in tournament/standings "Declare the first player to reach the target" {
+  status active
+  telos  "The first player to reach the target number of round wins wins the match."
+  statement event-driven {
+    when   RoundEnded on RoundResult
+    system shall "declare the first player to reach the target as the match winner"
+  }
+
+  scenario SCN-0012 "X reaches the target and wins the match" {
+    given Match { o-points: 0, starter: x, target: 2, winner: none, x-points: 1 }
+    given RoundResult { outcome: x-wins }
+    when  RoundEnded {}
+    then  Match.winner == x
+  }
+}

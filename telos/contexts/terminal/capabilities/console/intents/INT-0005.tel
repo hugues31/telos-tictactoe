@@ -1,9 +1,9 @@
-intent INT-0005 in terminal/console "Show the numbered board and round status" {
+intent INT-0005 in terminal/console "Show the numbered board and round and match status" {
   status active
-  telos  "Players see marks, numbers for free cells, and either whose turn it is or the final outcome."
+  telos  "Players see marks, numbers for free cells, the round status, the match score, the next starter and fresh grid, or the final match winner."
   statement event-driven {
     when   ShowBoard on BoardView
-    system shall "render the numbered grid and current round status"
+    system shall "render the numbered grid, round status, score, and match progression messages"
   }
 
   scenario SCN-0008 "The screen numbers free cells and shows O to play" {
@@ -22,5 +22,12 @@ intent INT-0005 in terminal/console "Show the numbered board and round status" {
     then  Screen.row2 == " O | O | 6"
     then  Screen.row3 == " 7 | 8 | 9"
     then  Screen.status == "X wins"
+  }
+
+  scenario SCN-0014 "The screen shows a one-nil match score" {
+    given BoardView { cells: ".........", outcome: playing, turn: x }
+    given MatchView { o-points: 0, x-points: 1 }
+    when  ShowBoard {}
+    then  Screen.score == "X 1 - 0 O"
   }
 }

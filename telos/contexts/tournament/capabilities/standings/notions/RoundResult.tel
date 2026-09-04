@@ -1,0 +1,4 @@
+notion tournament/standings/RoundResult value {
+  def  "The outcome published for one completed round."
+  attr outcome enum(x-wins, o-wins, draw)
+}

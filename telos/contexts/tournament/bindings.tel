@@ -1,0 +1,7 @@
+implements "tictactoe/domain/tournament.py" -> INT-0006
+implements "tictactoe/domain/tournament.py" -> INT-0007
+implements "tictactoe/domain/tournament.py" -> INT-0008
+proves     "tests/scn_0010_an_x_win_gives_x_one_point.py::scn_0010_an_x_win_gives_x_one_point" -> SCN-0010
+proves     "tests/scn_0011_a_draw_gives_neither_player_a_point.py::scn_0011_a_draw_gives_neither_player_a_point" -> SCN-0011
+proves     "tests/scn_0012_x_reaches_the_target_and_wins_the_match.py::scn_0012_x_reaches_the_target_and_wins_the_match" -> SCN-0012
+proves     "tests/scn_0013_o_starts_after_x_wins_a_round_that_x_started.py::scn_0013_o_starts_after_x_wins_a_round_that_x_started" -> SCN-0013

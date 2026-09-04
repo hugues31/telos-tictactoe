@@ -1,0 +1,8 @@
+notion tournament/standings/Match entity {
+  def  "The standings and next-round starter for a match played to a target number of round wins."
+  attr x-points int
+  attr o-points int
+  attr target   int
+  attr winner   enum(none, x, o)
+  attr starter  enum(x, o)
+}

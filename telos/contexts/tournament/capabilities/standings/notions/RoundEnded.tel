@@ -1,0 +1,3 @@
+notion tournament/standings/RoundEnded event {
+  def  "Signals that a completed round result is ready to update the match."
+}

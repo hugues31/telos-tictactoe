@@ -1,0 +1,24 @@
+intent INT-0006 in tournament/standings "Award points for a completed round" {
+  status active
+  telos  "A won round gives its winner one point; a draw gives neither player a point."
+  statement event-driven {
+    when   RoundEnded on RoundResult
+    system shall "award one point to the round winner and none for a draw"
+  }
+
+  scenario SCN-0010 "An X win gives X one point" {
+    given Match { o-points: 0, starter: x, target: 2, winner: none, x-points: 0 }
+    given RoundResult { outcome: x-wins }
+    when  RoundEnded {}
+    then  Match.x-points == 1
+    then  Match.o-points == 0
+  }
+
+  scenario SCN-0011 "A draw gives neither player a point" {
+    given Match { o-points: 0, starter: x, target: 2, winner: none, x-points: 0 }
+    given RoundResult { outcome: draw }
+    when  RoundEnded {}
+    then  Match.x-points == 0
+    then  Match.o-points == 0
+  }
+}

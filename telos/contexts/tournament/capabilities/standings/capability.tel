@@ -1,0 +1,3 @@
+capability tournament/standings "Standings" {
+  def "Tracks points, match victory, and the next round starter."
+}

@@ -1,0 +1,5 @@
+notion terminal/console/MatchView value {
+  def  "The match score published to the terminal for display."
+  attr x-points int
+  attr o-points int
+}
